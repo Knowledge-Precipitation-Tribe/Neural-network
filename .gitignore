@@ -8,6 +8,7 @@ __pycache__/
 
 .idea
 .DS_Store
+data/
 
 # Distribution / packaging
 .Python
