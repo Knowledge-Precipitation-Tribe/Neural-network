@@ -28,7 +28,7 @@ def ShowResult(net, dataReader):
 if __name__ == '__main__':
     sdr = DataReader_1_0(file_name)
     sdr.ReadData()
-    hp = HyperParameters_1_0(1, 1, eta=0.3, max_epoch=100, batch_size=10, eps=0.02)
+    hp = HyperParameters_1_0(1, 1, eta=0.2, max_epoch=100, batch_size=16, eps=0.005)
     net = NeuralNet_1_0(hp)
     net.train(sdr)
 
