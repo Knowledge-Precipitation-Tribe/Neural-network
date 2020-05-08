@@ -51,7 +51,7 @@ class DataReader_1_0(object):
 
     # permutation only affect along the first axis,
     # so we need transpose the array first
-    # 
+    #
     # >>> arr = np.arange(9).reshape((3, 3))
     # >>> np.random.permutation(arr)
     # array([[6, 7, 8],
