@@ -29,7 +29,7 @@ class NeuralNet_1_0(object):
     def __backwardBatch(self, batch_x, batch_y, batch_z):
         m = batch_x.shape[0]
         dZ = batch_z - batch_y
-        # 
+        # 若是二维矩阵则保持矩阵的二维特性
         dB = dZ.sum(axis=0, keepdims=True) / m
         dW = np.dot(batch_x.T, dZ) / m
         return dW, dB
