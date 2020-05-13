@@ -18,6 +18,13 @@ if __name__ == '__main__':
     X,Y = reader.GetWholeTrainSamples()
     num_example = X.shape[0]
     one = np.ones((num_example,1))
+    # Stack 1-D arrays as columns into a 2-D array.
+    # >>> a = np.array((1,2,3))
+    # >>> b = np.array((2,3,4))
+    # >>> np.column_stack((a,b))
+    # array([[1, 2],
+    #        [2, 3],
+    #        [3, 4]])
     x = np.column_stack((one, (X[0:num_example,:])))
 
     a = np.dot(x.T, x)
