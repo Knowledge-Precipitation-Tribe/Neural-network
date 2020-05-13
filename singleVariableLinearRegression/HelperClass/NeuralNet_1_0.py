@@ -29,6 +29,7 @@ class NeuralNet_1_0(object):
     def __backwardBatch(self, batch_x, batch_y, batch_z):
         m = batch_x.shape[0]
         dZ = batch_z - batch_y
+        # 
         dB = dZ.sum(axis=0, keepdims=True) / m
         dW = np.dot(batch_x.T, dZ) / m
         return dW, dB

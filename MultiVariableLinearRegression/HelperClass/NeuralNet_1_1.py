@@ -19,6 +19,7 @@ from HelperClass.TrainingHistory_1_0 import *
 class NeuralNet_1_1(object):
     def __init__(self, hp):
         self.hp = hp
+        # 这里将原来的数值型改为矩阵
         self.W = np.zeros((self.hp.input_size, self.hp.output_size))
         self.B = np.zeros((1, self.hp.output_size))
 
