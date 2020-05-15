@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-#
 '''
-# Name:         NeuralNet-keras
-# Description:  
+# Name:         NeuralNetwork-keras
+# Description:  多入单处层神经网络
 # Author:       super
 # Date:         2020/5/15
 '''
@@ -10,21 +10,24 @@ from keras.layers import Dense
 from keras.models import Sequential
 from keras.callbacks import EarlyStopping
 
+from 
+
 from HelperClass.DataReader_1_0 import *
 
 import matplotlib.pyplot as plt
 
 
 def get_data():
-    sdr = DataReader_1_0("../data/ch04.npz")
+    sdr = DataReader_1_0("../data/ch05.npz")
     sdr.ReadData()
     X,Y = sdr.GetWholeTrainSamples()
+
     return X, Y
 
 
 def build_model():
     model = Sequential()
-    model.add(Dense(1, activation='linear', input_dim=1))
+    model.add(Dense(1, activation='linear', input_shape=(2,)))
     model.compile(optimizer='SGD',
                   loss='mse')
     return model
@@ -56,4 +59,4 @@ if __name__ == '__main__':
     model.fit(x, y, epochs=100, batch_size=10, callbacks=[early_stopping])
     w, b = model.layers[0].get_weights()
     print(w, b)
-    plt_data(x, y, model)
+    # plt_data(x, y, model)
