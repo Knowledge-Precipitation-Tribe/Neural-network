@@ -1,11 +1,10 @@
-# Copyright (c) Microsoft. All rights reserved.
-# Licensed under the MIT license. See LICENSE file in the project root for full license information.
-
-"""
-Version 1.0
-- crossentropy for binary classifier (logistic)
-- crossentropy for binary classifier (tanh)
-"""
+# -*- coding: utf-8 -*-#
+'''
+# Name:         LossFunction
+# Description:  分类损失函数
+# Author:       super
+# Date:         2020/5/16
+'''
 
 import numpy as np
 
@@ -28,6 +27,7 @@ class LossFunction_1_0(object):
     # end def
 
     # for binary classifier
+    # 交叉熵损失函数
     def CE2(self, A, Y, count):
         p1 = 1 - Y
         p2 = np.log(1 - A)
@@ -42,6 +42,7 @@ class LossFunction_1_0(object):
     # end def
 
     # for binary tanh classifier
+    # 使用tanh的损失函数
     def CE2_tanh(self, A, Y, count):
         #p = (1-Y) * np.log(1-A) + (1+Y) * np.log(1+A)
         p = (1-Y) * np.log((1-A)/2) + (1+Y) * np.log((1+A)/2)

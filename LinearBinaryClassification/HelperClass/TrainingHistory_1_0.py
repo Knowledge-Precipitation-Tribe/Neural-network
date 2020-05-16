@@ -1,9 +1,11 @@
-# Copyright (c) Microsoft. All rights reserved.
-# Licensed under the MIT license. See LICENSE file in the project root for full license information.
+# -*- coding: utf-8 -*-#
+'''
+# Name:         TrainingHistory
+# Description:  记录训练历史
+# Author:       super
+# Date:         2020/5/16
+'''
 
-"""
-Version 1.0
-"""
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm

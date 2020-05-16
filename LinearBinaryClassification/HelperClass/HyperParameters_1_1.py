@@ -1,13 +1,11 @@
-# Copyright (c) Microsoft. All rights reserved.
-# Licensed under the MIT license. See LICENSE file in the project root for full license information.
-
+# -*- coding: utf-8 -*-#
+'''
+# Name:         HyperParameters
+# Description:  设置网络超参数
+# Author:       super
+# Date:         2020/5/16
+'''
 from HelperClass.EnumDef_1_0 import *
-
-"""
-Version 1.1
-what's new:
-- add NetType
-"""
 
 class HyperParameters_1_1(object):
     def __init__(self, input_size, output_size, eta=0.1, max_epoch=1000, batch_size=5, eps=0.1, net_type=NetType.Fitting):

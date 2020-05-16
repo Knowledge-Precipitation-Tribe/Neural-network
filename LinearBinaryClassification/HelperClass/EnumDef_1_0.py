@@ -1,8 +1,13 @@
-# Copyright (c) Microsoft. All rights reserved.
-# Licensed under the MIT license. See LICENSE file in the project root for full license information.
-
+# -*- coding: utf-8 -*-#
+'''
+# Name:         EnumDef
+# Description:  判断网络类型
+# Author:       super
+# Date:         2020/5/16
+'''
 from enum import Enum
 
+# 判断网络类型
 class NetType(Enum):
     Fitting = 1,
     BinaryClassifier = 2,

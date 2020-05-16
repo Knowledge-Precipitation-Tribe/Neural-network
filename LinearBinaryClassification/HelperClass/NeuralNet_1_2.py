@@ -1,12 +1,12 @@
-# Copyright (c) Microsoft. All rights reserved.
-# Licensed under the MIT license. See LICENSE file in the project root for full license information.
-
-"""
-Version 1.2
-what's new:
-- support nettype
-- move loss function to individual class
-"""
+# -*- coding: utf-8 -*-#
+'''
+# Name:         NeuralNet
+# Description:  定义神经网络
+                    支持网络类型
+                    将损失函数抽象为单独的类
+# Author:       super
+# Date:         2020/5/16
+'''
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -28,6 +28,7 @@ class NeuralNet_1_2(object):
 
     def forwardBatch(self, batch_x):
         Z = np.dot(batch_x, self.W) + self.B
+        # 根据网络类型进行计算
         if self.hp.net_type == NetType.BinaryClassifier:
             A = Logistic().forward(Z)
             return A

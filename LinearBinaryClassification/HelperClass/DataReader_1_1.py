@@ -1,9 +1,10 @@
-# Copyright (c) Microsoft. All rights reserved.
-# Licensed under the MIT license. See LICENSE file in the project root for full license information.
-
-"""
-Version 1.1
-"""
+# -*- coding: utf-8 -*-#
+'''
+# Name:         DataReader
+# Description:  读取数据
+# Author:       super
+# Date:         2020/5/16
+'''
 
 import numpy as np
 from pathlib import Path

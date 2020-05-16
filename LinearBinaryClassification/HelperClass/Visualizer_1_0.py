@@ -1,10 +1,16 @@
-# Copyright (c) Microsoft. All rights reserved.
-# Licensed under the MIT license. See LICENSE file in the project root for full license information.
+# -*- coding: utf-8 -*-#
+'''
+# Name:         Visualizer
+# Description:  可视化训练结果
+# Author:       super
+# Date:         2020/5/16
+'''
 
 import numpy as np
 import matplotlib.pyplot as plt
 import math
 
+# 二分类可视化
 def DrawTwoCategoryPoints(X1, X2, Y, xlabel="x1", ylabel="x2", title=None, show=False, isPredicate=False):
     colors = ['b', 'r']
     shapes = ['s', 'x']
@@ -27,6 +33,7 @@ def DrawTwoCategoryPoints(X1, X2, Y, xlabel="x1", ylabel="x2", title=None, show=
         plt.show()
 
 
+# 三分类可视化
 def DrawThreeCategoryPoints(X1, X2, Y_onehot, xlabel="x1", ylabel="x2", title=None, show=False, isPredicate=False):
     colors = ['b', 'r', 'g']
     shapes = ['s', 'x', 'o']
