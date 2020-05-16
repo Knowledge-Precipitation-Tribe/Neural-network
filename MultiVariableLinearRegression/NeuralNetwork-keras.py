@@ -15,17 +15,36 @@ from sklearn.preprocessing import StandardScaler
 from HelperClass.DataReader_1_0 import *
 
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 
 def get_data():
     sdr = DataReader_1_0("../data/ch05.npz")
     sdr.ReadData()
     X,Y = sdr.GetWholeTrainSamples()
+    x_mean = np.mean(X)
+    x_std = np.std(X)
+    y_mean = np.mean(Y)
+    y_std = np.std(Y)
     ss = StandardScaler()
     X = ss.fit_transform(X)
     Y = ss.fit_transform(Y)
-    return X, Y
+
+    # test data
+    x1 = 15
+    x2 = 93
+    x = np.array([x1, x2]).reshape(1, 2)
+    x_new = NormalizePredicateData(x, x_mean, x_std)
+
+    return X, Y, x_new, y_mean, y_std
+
+
+def NormalizePredicateData(X_raw, x_mean, x_std):
+    X_new = np.zeros(X_raw.shape)
+    n = X_raw.shape[1]
+    for i in range(n):
+        col_i = X_raw[:,i]
+        X_new[:,i] = (col_i - x_mean) / x_std
+    return X_new
 
 
 def build_model():
@@ -34,21 +53,6 @@ def build_model():
     model.compile(optimizer='SGD',
                   loss='mse')
     return model
-
-
-def plt_3d(model, X, Y):
-    # draw example points
-    fig = plt.figure()
-    ax = Axes3D(fig)
-    ax.scatter(X[:,0],X[:,1],Y)
-    p = np.linspace(-2,1)
-    q = np.linspace(-2,2)
-    P,Q = np.meshgrid(p,q)
-    R = np.hstack((P.ravel().reshape(2500,1), Q.ravel().reshape(2500,1)))
-    Z = model.predict(R)
-    Z = Z.reshape(50,50)
-    ax.plot_surface(P,Q,Z, cmap='rainbow')
-    plt.show()
 
 
 def plt_loss(history):
@@ -64,7 +68,7 @@ def plt_loss(history):
 
 
 if __name__ == '__main__':
-    X, Y = get_data()
+    X, Y, x_new, y_mean, y_std = get_data()
     x = np.array(X)
     y = np.array(Y)
     print(x.shape)
@@ -74,8 +78,14 @@ if __name__ == '__main__':
     model = build_model()
     # patience设置当发现loss没有下降的情况下，经过patience个epoch后停止训练
     early_stopping = EarlyStopping(monitor='loss', patience=100)
-    history = model.fit(x, y, epochs=100, batch_size=32, callbacks=[early_stopping])
+    history = model.fit(x, y, epochs=200, batch_size=10, callbacks=[early_stopping])
     w, b = model.layers[0].get_weights()
-    print(w, b)
-    plt_3d(model, x, y)
+    print(w)
+    print(b)
     plt_loss(history)
+
+    # inference
+    z = model.predict(x_new)
+    print("z=", z)
+    Z_true = z * y_std + y_mean
+    print("Z_true=", Z_true)
