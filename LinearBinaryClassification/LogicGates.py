@@ -27,7 +27,7 @@ class LogicDataReader(DataReader_1_1):
     def Read_Logic_AND_Data(self):
         # X = np.array([0, 0, 0, 1, 1, 0, 1, 1]).reshape(4, 2)
         X = np.array([1, 1, 1, 0, 0, 1, 0, 0]).reshape(4, 2)
-        Y = np.array([0, 0, 0, 1]).reshape(4, 1)
+        Y = np.array([1,0,0,0]).reshape(4, 1)
         self.XTrain = self.XRaw = X
         self.YTrain = self.YRaw = Y
         self.num_train = self.XRaw.shape[0]
@@ -42,7 +42,7 @@ class LogicDataReader(DataReader_1_1):
     def Read_Logic_OR_Data(self):
         # X = np.array([0, 0, 0, 1, 1, 0, 1, 1]).reshape(4, 2)
         X = np.array([1, 1, 1, 0, 0, 1, 0, 0]).reshape(4, 2)
-        Y = np.array([0, 1, 1, 1]).reshape(4, 1)
+        Y = np.array([1,1,1,0]).reshape(4, 1)
         self.XTrain = self.XRaw = X
         self.YTrain = self.YRaw = Y
         self.num_train = self.XRaw.shape[0]
