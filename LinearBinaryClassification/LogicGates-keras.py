@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-#
 '''
-# Name:         LogicGates
-# Description:  实现逻辑门
+# Name:         LogicGates-keras
+# Description:  
 # Author:       super
 # Date:         2020/5/22
 '''
 
 import numpy as np
 import matplotlib.pyplot as plt
+
+from keras.models import Sequential
+from keras.layers import Dense
 
 from HelperClass.NeuralNet_1_2 import *
 from HelperClass.Visualizer_1_0 import *
@@ -25,8 +28,7 @@ class LogicDataReader(DataReader_1_1):
         self.num_train = self.XRaw.shape[0]
 
     def Read_Logic_AND_Data(self):
-        # X = np.array([0, 0, 0, 1, 1, 0, 1, 1]).reshape(4, 2)
-        X = np.array([1, 1, 1, 0, 0, 1, 0, 0]).reshape(4, 2)
+        X = np.array([0, 0, 0, 1, 1, 0, 1, 1]).reshape(4, 2)
         Y = np.array([0, 0, 0, 1]).reshape(4, 1)
         self.XTrain = self.XRaw = X
         self.YTrain = self.YRaw = Y
@@ -40,8 +42,7 @@ class LogicDataReader(DataReader_1_1):
         self.num_train = self.XRaw.shape[0]
 
     def Read_Logic_OR_Data(self):
-        # X = np.array([0, 0, 0, 1, 1, 0, 1, 1]).reshape(4, 2)
-        X = np.array([1, 1, 1, 0, 0, 1, 0, 0]).reshape(4, 2)
+        X = np.array([0, 0, 0, 1, 1, 0, 1, 1]).reshape(4, 2)
         Y = np.array([0, 1, 1, 1]).reshape(4, 1)
         self.XTrain = self.XRaw = X
         self.YTrain = self.YRaw = Y
@@ -55,28 +56,11 @@ class LogicDataReader(DataReader_1_1):
         self.num_train = self.XRaw.shape[0]
 
 
-def Test(net, reader):
-    X, Y = reader.GetWholeTrainSamples()
-    A = net.inference(X)
-    print(A)
-    diff = np.abs(A - Y)
-    result = np.where(diff < 1e-2, True, False)
-    if result.sum() == 4:
-        return True
-    else:
-        return False
-
-
-def draw_split_line(net):
-    if (net.W.shape[0] == 2):
-        w = -net.W[0, 0] / net.W[1, 0]
-        b = -net.B[0, 0] / net.W[1, 0]
-    else:
-        w = net.W[0]
-        b = net.B[0]
-    x = np.array([-0.1, 1.1])
-    y = w * x + b
-    plt.plot(x, y)
+def build_model():
+    model = Sequential()
+    model.add(Dense(1, activation='sigmoid', input_shape=(2,)))
+    model.compile(optimizer='SGD', loss='binary_crossentropy')
+    return model
 
 
 def draw_source_data(reader, title, show=False):
@@ -91,42 +75,28 @@ def draw_source_data(reader, title, show=False):
         DrawTwoCategoryPoints(X[:, 0], X[:, 1], Y[:, 0], title=title, show=show)
 
 
-def train(reader, title):
-    draw_source_data(reader, title, show=True)
-    # net train
-    num_input = reader.XTrain.shape[1]
-    num_output = 1
-    hp = HyperParameters_1_1(num_input, num_output, eta=0.5, max_epoch=5000, batch_size=1, eps=2e-3,
-                             net_type=NetType.BinaryClassifier)
-    net = NeuralNet_1_2(hp)
-    net.train(reader, checkpoint=1)
-    # test
-    print(Test(net, reader))
-    # visualize
-    draw_source_data(reader, title, show=False)
-    draw_split_line(net)
-    plt.show()
+def draw_split_line(w, b):
+    x = np.array([-0.1, 1.1])
+    old_w = w
+    w = -w[0,0]/old_w[1,0]
+    b = -b[0]/old_w[1,0]
+    y = w * x + b
+    plt.plot(x, y)
 
 
 if __name__ == '__main__':
-    # reader = LogicDataReader()
-    # reader.Read_Logic_NOT_Data()
-    # train(reader, "Logic NOT operator")
-
     reader = LogicDataReader()
     reader.Read_Logic_AND_Data()
-    train(reader, "Logic AND operator")
+    x, y = reader.XTrain, reader.YTrain
+    print("x", x)
+    print("y", y)
+    model = build_model()
+    model.fit(x, y, epochs=1000, batch_size=1)
+    # 获得权重
+    w, b = model.layers[0].get_weights()
+    print(w)
+    print(b)
 
-    reader = LogicDataReader()
-    reader.Read_Logic_OR_Data()
-    train(reader, "Logic OR operator")
-
-    # reader = LogicDataReader()
-    # reader.Read_Logic_NAND_Data()
-    # train(reader, "Logic NAND operator")
-
-
-
-    # reader = LogicDataReader()
-    # reader.Read_Logic_NOR_Data()
-    # train(reader, "Logic NOR operator")
+    draw_source_data(reader, "Logic AND operator")
+    draw_split_line(w, b)
+    plt.show()
