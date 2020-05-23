@@ -10,6 +10,7 @@ import numpy as np
 
 from HelperClass.NeuralNet_1_2 import *
 from HelperClass.DataReader_1_3 import *
+from HelperClass.Visualizer_1_0 import *
 
 from keras.models import Sequential
 from keras.layers import Dense
@@ -38,13 +39,16 @@ if __name__ == '__main__':
     # print(x_train)
     # print(y_train)
 
-    model = build_model()
-    model.fit(x_train, y_train, epochs=100, batch_size=10)
-    w, b = model.layers[0].get_weights()
-    print(w)
-    print(b)
+    # model = build_model()
+    # model.fit(x_train, y_train, epochs=100, batch_size=10)
+    # w, b = model.layers[0].get_weights()
+    # print(w)
+    # print(b)
+    #
+    # output = model.predict(x_test)
+    # r = np.argmax(output, axis=1) + 1
+    # print("output=", output)
+    # print("r=", r)
 
-    output = model.predict(x_test)
-    r = np.argmax(output, axis=1) + 1
-    print("output=", output)
-    print("r=", r)
+    DrawThreeCategoryPoints(x_train[:, 0], x_train[:, 1], y_train)
+    plt.show()
