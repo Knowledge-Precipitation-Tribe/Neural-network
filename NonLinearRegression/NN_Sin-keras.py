@@ -53,8 +53,8 @@ def draw_train_history(history):
 if __name__ == '__main__':
     x_train, y_train, x_val, y_val, x_test, y_test = load_data()
 
-    model_path = "nn_sin.h5"
-    model_weights_path = "nn_sin_weights.h5"
+    model_path = "nn_sin_keras/nn_sin.h5"
+    model_weights_path = "nn_sin_keras/nn_sin_weights.h5"
 
     if os.path.exists(model_path):
         model = load_model(model_path)
@@ -72,7 +72,7 @@ if __name__ == '__main__':
         model.save(model_path)
         model.save_weights(model_weights_path)
 
-    model_summary_path = "nn_sin_summary.txt"
+    model_summary_path = "nn_sin_keras/nn_sin_summary.txt"
     with open(model_summary_path, 'w') as f:
         with redirect_stdout(f):
             model.summary()
