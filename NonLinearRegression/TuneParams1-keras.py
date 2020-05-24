@@ -6,22 +6,16 @@
 # Date:         2020/5/24
 '''
 
-import numpy as np
-
 from HelperClass2.DataReader_2_0 import *
 
-from keras.models import Sequential, load_model
+from keras.models import Sequential
 from keras.layers import Dense
 from keras.wrappers.scikit_learn import KerasRegressor
-from keras.callbacks import EarlyStopping
 from keras.optimizers import Adam
 
-from sklearn.model_selection import cross_val_score, StratifiedKFold, GridSearchCV
+from sklearn.model_selection import GridSearchCV
 
 import matplotlib.pyplot as plt
-from contextlib import redirect_stdout
-
-import os
 
 def load_data():
     train_data_name = "../data/ch08.train.npz"
@@ -70,7 +64,8 @@ if __name__ == '__main__':
     model = KerasRegressor(build_fn=build_model)
 
     param_grid = dict(batch_size=batch, eta=eta, epochs=epochs)
-    grid = GridSearchCV(estimator=model, param_grid=param_grid)
+    # n_jobs代表并行处理，-1代表用所有的处理器
+    grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1)
     grid_result = grid.fit(x_train, y_train)
     # summarize results
     print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
