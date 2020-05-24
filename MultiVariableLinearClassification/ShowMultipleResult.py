@@ -25,6 +25,7 @@ def ShowResult(X,Y,xt,yt):
     fig = plt.figure(figsize=(6,6))
     DrawThreeCategoryPoints(X[:,0], X[:,1], Y[:], xlabel="x1", ylabel="x2", show=False)
 
+    #分别对应不同的直线
     b13 = (net.B[0,0] - net.B[0,2])/(net.W[1,2] - net.W[1,0])
     w13 = (net.W[0,0] - net.W[0,2])/(net.W[1,2] - net.W[1,0])
 
@@ -50,6 +51,7 @@ def ShowResult(X,Y,xt,yt):
     plt.axis([-0.1,1.1,-0.1,1.1])
 
     DrawThreeCategoryPoints(xt[:,0], xt[:,1], yt[:], xlabel="x1", ylabel="x2", show=True, isPredicate=True)
+
 
 # 主程序
 if __name__ == '__main__':
