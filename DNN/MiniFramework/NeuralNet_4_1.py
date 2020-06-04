@@ -122,7 +122,7 @@ class NeuralNet_4_1(object):
         t1 = time.time()
         print("time used:", t1 - t0)
 
-        self.save_parameters()
+        # self.save_parameters()
 
         if need_test:
             print("testing...")

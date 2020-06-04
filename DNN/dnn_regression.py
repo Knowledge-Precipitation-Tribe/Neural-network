@@ -8,6 +8,7 @@
 
 from MiniFramework.NeuralNet_4_1 import *
 from MiniFramework.ActivationLayer import *
+from MiniFramework.DataReader_2_0 import *
 
 train_file = "../data/ch09.train.npz"
 test_file = "../data/ch09.test.npz"
@@ -48,18 +49,18 @@ def model():
     batch_size = 10
     learning_rate = 0.5
 
-    params = HyperParameters_4_0(
+    params = HyperParameters_4_1(
         learning_rate, max_epoch, batch_size,
         net_type=NetType.Fitting,
         init_method=InitialMethod.Xavier,
         stopper=Stopper(StopCondition.StopLoss, 0.001))
 
-    net = NeuralNet_4_0(params, "Level1_CurveFittingNet")
-    fc1 = FcLayer_1_0(num_input, num_hidden1, params)
+    net = NeuralNet_4_1(params, "Level1_CurveFittingNet")
+    fc1 = FcLayer_1_1(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
     sigmoid1 = ActivationLayer(Sigmoid())
     net.add_layer(sigmoid1, "sigmoid1")
-    fc2 = FcLayer_1_0(num_hidden1, num_output, params)
+    fc2 = FcLayer_1_1(num_hidden1, num_output, params)
     net.add_layer(fc2, "fc2")
 
     net.train(dataReader, checkpoint=100, need_test=True)

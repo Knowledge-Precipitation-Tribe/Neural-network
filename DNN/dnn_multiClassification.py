@@ -57,19 +57,19 @@ def ShowResult(net, title):
 
 
 def model_relu(num_input, num_hidden, num_output, hp):
-    net = NeuralNet_4_0(hp, "chinabank_relu")
+    net = NeuralNet_4_1(hp, "chinabank_relu")
 
-    fc1 = FcLayer_1_0(num_input, num_hidden, hp)
+    fc1 = FcLayer_1_1(num_input, num_hidden, hp)
     net.add_layer(fc1, "fc1")
     r1 = ActivationLayer(Relu())
     net.add_layer(r1, "Relu1")
 
-    fc2 = FcLayer_1_0(num_hidden, num_hidden, hp)
+    fc2 = FcLayer_1_1(num_hidden, num_hidden, hp)
     net.add_layer(fc2, "fc2")
     r2 = ActivationLayer(Relu())
     net.add_layer(r2, "Relu2")
 
-    fc3 = FcLayer_1_0(num_hidden, num_output, hp)
+    fc3 = FcLayer_1_1(num_hidden, num_output, hp)
     net.add_layer(fc3, "fc3")
     softmax = ClassificationLayer(Softmax())
     net.add_layer(softmax, "softmax")
@@ -82,14 +82,14 @@ def model_relu(num_input, num_hidden, num_output, hp):
 
 
 def model_sigmoid(num_input, num_hidden, num_output, hp):
-    net = NeuralNet_4_0(hp, "chinabank_sigmoid")
+    net = NeuralNet_4_1(hp, "chinabank_sigmoid")
 
-    fc1 = FcLayer_1_0(num_input, num_hidden, hp)
+    fc1 = FcLayer_1_1(num_input, num_hidden, hp)
     net.add_layer(fc1, "fc1")
     s1 = ActivationLayer(Sigmoid())
     net.add_layer(s1, "Sigmoid1")
 
-    fc2 = FcLayer_1_0(num_hidden, num_output, hp)
+    fc2 = FcLayer_1_1(num_hidden, num_output, hp)
     net.add_layer(fc2, "fc2")
     softmax1 = ClassificationLayer(Softmax())
     net.add_layer(softmax1, "softmax1")
@@ -111,7 +111,7 @@ if __name__ == '__main__':
     batch_size = 10
     learning_rate = 0.1
 
-    hp = HyperParameters_4_0(
+    hp = HyperParameters_4_1(
         learning_rate, max_epoch, batch_size,
         net_type=NetType.MultipleClassifier,
         init_method=InitialMethod.Xavier,

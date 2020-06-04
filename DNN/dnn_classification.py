@@ -89,20 +89,20 @@ def model(dataReader):
     batch_size = 5
     learning_rate = 0.1
 
-    params = HyperParameters_4_0(
+    params = HyperParameters_4_1(
         learning_rate, max_epoch, batch_size,
         net_type=NetType.BinaryClassifier,
         init_method=InitialMethod.Xavier,
         stopper=Stopper(StopCondition.StopLoss, 0.02))
 
-    net = NeuralNet_4_0(params, "Arc")
+    net = NeuralNet_4_1(params, "Arc")
 
-    fc1 = FcLayer_1_0(num_input, num_hidden, params)
+    fc1 = FcLayer_1_1(num_input, num_hidden, params)
     net.add_layer(fc1, "fc1")
     sigmoid1 = ActivationLayer(Sigmoid())
     net.add_layer(sigmoid1, "sigmoid1")
 
-    fc2 = FcLayer_1_0(num_hidden, num_output, params)
+    fc2 = FcLayer_1_1(num_hidden, num_output, params)
     net.add_layer(fc2, "fc2")
     logistic = ClassificationLayer(Logistic())
     net.add_layer(logistic, "logistic")

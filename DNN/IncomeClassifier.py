@@ -13,6 +13,7 @@ import math
 from MiniFramework.NeuralNet_4_1 import *
 from MiniFramework.ActivationLayer import *
 from MiniFramework.ClassificationLayer import *
+from MiniFramework.DataReader_2_0 import *
 
 train_file = "../data/ch14.Income.train.npz"
 test_file = "../data/ch14.Income.test.npz"
@@ -39,35 +40,35 @@ def model(dr):
     batch_size = 16
     learning_rate = 0.1
 
-    params = HyperParameters_4_0(
+    params = HyperParameters_4_1(
         learning_rate, max_epoch, batch_size,
         net_type=NetType.BinaryClassifier,
         init_method=InitialMethod.MSRA,
         stopper=Stopper(StopCondition.StopDiff, 1e-3))
 
-    net = NeuralNet_4_0(params, "Income")
+    net = NeuralNet_4_1(params, "Income")
 
-    fc1 = FcLayer_1_0(num_input, num_hidden1, params)
+    fc1 = FcLayer_1_1(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
     a1 = ActivationLayer(Relu())
     net.add_layer(a1, "relu1")
 
-    fc2 = FcLayer_1_0(num_hidden1, num_hidden2, params)
+    fc2 = FcLayer_1_1(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
     a2 = ActivationLayer(Relu())
     net.add_layer(a2, "relu2")
 
-    fc3 = FcLayer_1_0(num_hidden2, num_hidden3, params)
+    fc3 = FcLayer_1_1(num_hidden2, num_hidden3, params)
     net.add_layer(fc3, "fc3")
     a3 = ActivationLayer(Relu())
     net.add_layer(a3, "relu3")
 
-    fc4 = FcLayer_1_0(num_hidden3, num_hidden4, params)
+    fc4 = FcLayer_1_1(num_hidden3, num_hidden4, params)
     net.add_layer(fc4, "fc4")
     a4 = ActivationLayer(Relu())
     net.add_layer(a4, "relu4")
 
-    fc5 = FcLayer_1_0(num_hidden4, num_output, params)
+    fc5 = FcLayer_1_1(num_hidden4, num_output, params)
     net.add_layer(fc5, "fc5")
     logistic = ClassificationLayer(Logistic())
     net.add_layer(logistic, "logistic")

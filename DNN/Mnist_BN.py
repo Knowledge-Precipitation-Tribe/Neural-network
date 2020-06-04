@@ -1,21 +1,20 @@
 # -*- coding: utf-8 -*-#
 '''
-# Name:         MnistClassifier
+# Name:         Mnist_BN
 # Description:  
 # Author:       super
-# Date:         2020/6/2
+# Date:         2020/6/4
 '''
 
 from MiniFramework.NeuralNet_4_1 import *
+from ExtendedDataReader.MnistImageDataReader import *
+from MiniFramework.BatchNormLayer import *
 from MiniFramework.ActivationLayer import *
 from MiniFramework.ClassificationLayer import *
 
-from ExtendedDataReader.MnistImageDataReader import *
-
-
 def LoadData():
     print("reading data...")
-    dr = MnistImageDataReader(mode="vector")
+    dr = MnistImageDataReader("vector")
     dr.ReadData()
     dr.NormalizeX()
     dr.NormalizeY(NetType.MultipleClassifier)
@@ -34,7 +33,7 @@ if __name__ == '__main__':
     num_hidden3 = 32
     num_hidden4 = 16
     num_output = 10
-    max_epoch = 20
+    max_epoch = 30
     batch_size = 64
     learning_rate = 0.1
 
@@ -44,25 +43,33 @@ if __name__ == '__main__':
         init_method=InitialMethod.MSRA,
         stopper=Stopper(StopCondition.StopLoss, 0.12))
 
-    net = NeuralNet_4_1(params, "MNIST")
+    net = NeuralNet_4_1(params, "Mnist")
 
     fc1 = FcLayer_1_1(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
+    bn1 = BnLayer(num_hidden1)
+    net.add_layer(bn1, "bn1")
     r1 = ActivationLayer(Relu())
     net.add_layer(r1, "r1")
 
     fc2 = FcLayer_1_1(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
+    bn2 = BnLayer(num_hidden2)
+    net.add_layer(bn2, "bn2")
     r2 = ActivationLayer(Relu())
     net.add_layer(r2, "r2")
 
     fc3 = FcLayer_1_1(num_hidden2, num_hidden3, params)
     net.add_layer(fc3, "fc3")
+    bn3 = BnLayer(num_hidden3)
+    net.add_layer(bn3, "bn3")
     r3 = ActivationLayer(Relu())
     net.add_layer(r3, "r3")
 
     fc4 = FcLayer_1_1(num_hidden3, num_hidden4, params)
     net.add_layer(fc4, "fc4")
+    bn4 = BnLayer(num_hidden4)
+    net.add_layer(bn4, "bn4")
     r4 = ActivationLayer(Relu())
     net.add_layer(r4, "r4")
 
@@ -71,5 +78,8 @@ if __name__ == '__main__':
     softmax = ClassificationLayer(Softmax())
     net.add_layer(softmax, "softmax")
 
+    # net.load_parameters()
+
     net.train(dataReader, checkpoint=0.05, need_test=True)
+
     net.ShowLossHistory(xcoord=XCoordinate.Iteration)
