@@ -12,15 +12,12 @@ import math
 import os
 import sys
 
-from MiniFramework.DataReader_2_0 import *
-from MiniFramework.Layer import *
-from MiniFramework.FullConnectionLayer_1_0 import *
-from MiniFramework.HyperParameters_4_0 import *
+from MiniFramework.FullConnectionLayer_1_1 import *
 from MiniFramework.LossFunction_1_1 import *
 from MiniFramework.TrainingHistory_2_4 import *
 
 
-class NeuralNet_4_0(object):
+class NeuralNet_4_1(object):
     def __init__(self, params, model_name):
         self.model_name = model_name
         self.hp = params
@@ -94,6 +91,11 @@ class NeuralNet_4_0(object):
             for iteration in range(max_iteration):
                 # get x and y value for one sample
                 batch_x, batch_y = dataReader.GetBatchTrainSamples(self.hp.batch_size, iteration)
+
+                # for optimizers which need pre-update weights
+                if self.hp.optimizer_name == OptimizerName.Nag:
+                    self.__pre_update()
+
                 # get z from x,y
                 self.__forward(batch_x, train=True)
                 # calculate gradient of w and b
@@ -129,12 +131,13 @@ class NeuralNet_4_0(object):
         # end if
 
     def CheckErrorAndLoss(self, dataReader, train_x, train_y, epoch, total_iteration):
+        self.Hook()
+
         print("epoch=%d, total_iteration=%d" % (epoch, total_iteration))
 
         # calculate train loss
         self.__forward(train_x, train=False)
         loss_train = self.lossFunc.CheckLoss(self.output, train_y)
-        loss_train = loss_train  # + regular_cost / train_x.shape[0]
         accuracy_train = self.__CalAccuracy(self.output, train_y)
         print("loss_train=%.6f, accuracy_train=%f" % (loss_train, accuracy_train))
 
@@ -142,7 +145,6 @@ class NeuralNet_4_0(object):
         vld_x, vld_y = dataReader.GetValidationSet()
         self.__forward(vld_x, train=False)
         loss_vld = self.lossFunc.CheckLoss(self.output, vld_y)
-        loss_vld = loss_vld  # + regular_cost / vld_x.shape[0]
         accuracy_vld = self.__CalAccuracy(self.output, vld_y)
         print("loss_valid=%.6f, accuracy_valid=%f" % (loss_vld, accuracy_vld))
 
@@ -152,11 +154,15 @@ class NeuralNet_4_0(object):
             need_stop = True
         return need_stop
 
+    # for user's customized action
+    def Hook(self):
+        pass
+
     def Test(self, dataReader):
         x, y = dataReader.GetTestSet()
         self.__forward(x, train=False)
         correct = self.__CalAccuracy(self.output, y)
-        return correct
+        print(correct)
 
     def __CalAccuracy(self, a, y):
         assert (a.shape == y.shape)
@@ -177,10 +183,6 @@ class NeuralNet_4_0(object):
             r = (ra == ry)
             correct = r.sum()
             return correct / m
-
-    def inference(self, X):
-        self.__forward(X, train=False)
-        return self.output
 
     # save weights value when got low loss than before
     def save_parameters(self):
@@ -209,3 +211,9 @@ class NeuralNet_4_0(object):
 
     def GetLatestAverageLoss(self, count=10):
         return self.loss_trace.GetLatestAverageLoss(count)
+
+    def PrintWeightsBiasValue(self):
+        for i in range(self.layer_count):
+            layer = self.layer_list[i]
+            if isinstance(layer, FcLayer_1_1):
+                layer.PrintWeightBiasValue()

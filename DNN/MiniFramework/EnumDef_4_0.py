@@ -24,6 +24,15 @@ class XCoordinate(Enum):
     Iteration = 1,
     Epoch = 2
 
+class OptimizerName(Enum):
+    SGD = 0,
+    Momentum = 1,
+    Nag = 2,
+    AdaGrad = 3,
+    AdaDelta = 4,
+    RMSProp = 5,
+    Adam = 6
+
 class StopCondition(Enum):
     Nothing = 0,    # reach the max_epoch then stop
     StopLoss = 1,   # reach specified loss value then stop

@@ -6,7 +6,7 @@
 # Date:         2020/6/2
 '''
 
-from MiniFramework.NeuralNet_4_0 import *
+from MiniFramework.NeuralNet_4_1 import *
 from MiniFramework.ActivationLayer import *
 from MiniFramework.ClassificationLayer import *
 
