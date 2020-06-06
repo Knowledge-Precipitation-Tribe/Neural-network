@@ -8,7 +8,7 @@
 import numpy as np
 
 from keras.datasets import boston_housing
-from keras.wrappers.scikit_learn import KerasRegressor
+from keras.wrappers.scikit_learn import KerasRegressor, KerasClassifier
 from keras.models import Sequential
 from keras.layers import Dense
 
@@ -29,10 +29,28 @@ def load_data():
     return (x_train, y_train), (x_test, y_test)
 
 
-def build_model():
+def build_model1():
+    model = Sequential()
+    model.add(Dense(128, activation='relu', input_shape=(13, )))
+    model.add(Dense(64, activation='relu'))
+    model.add(Dense(1, activation='linear'))
+    model.compile(optimizer='adam',
+                  loss='mean_squared_error')
+    return model
+
+def build_model2():
     model = Sequential()
     model.add(Dense(64, activation='relu', input_shape=(13, )))
     model.add(Dense(32, activation='relu'))
+    model.add(Dense(1, activation='linear'))
+    model.compile(optimizer='adam',
+                  loss='mean_squared_error')
+    return model
+
+def build_model3():
+    model = Sequential()
+    model.add(Dense(32, activation='relu', input_shape=(13, )))
+    model.add(Dense(16, activation='relu'))
     model.add(Dense(1, activation='linear'))
     model.compile(optimizer='adam',
                   loss='mean_squared_error')
@@ -42,11 +60,11 @@ def build_model():
 if __name__ == '__main__':
     (x_train, y_train), (x_test, y_test) = load_data()
 
-    model1 = KerasRegressor(build_fn=build_model, epochs=100, batch_size=64)
+    model1 = KerasRegressor(build_fn=build_model1, epochs=100, batch_size=64)
     model1._estimator_type = "regressor"
-    model2 = KerasRegressor(build_fn=build_model, epochs=100, batch_size=64)
+    model2 = KerasRegressor(build_fn=build_model2, epochs=100, batch_size=64)
     model2._estimator_type = "regressor"
-    model3 = KerasRegressor(build_fn=build_model, epochs=100, batch_size=64)
+    model3 = KerasRegressor(build_fn=build_model3, epochs=100, batch_size=64)
     model3._estimator_type = "regressor"
 
     cls = VotingRegressor(estimators=[
@@ -58,4 +76,3 @@ if __name__ == '__main__':
     joblib.dump(cls, "sklearn-regressor.h5")
 
     print("score: ", cls.score(x_test, y_test))
-

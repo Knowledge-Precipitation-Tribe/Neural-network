@@ -77,6 +77,7 @@ def build_model1():
                   metrics=['accuracy'])
     return model
 
+
 def build_model2():
     model = Sequential()
     model.add(Dense(64, activation='relu', input_shape=(784, )))
@@ -86,6 +87,7 @@ def build_model2():
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
     return model
+
 
 def build_model3():
     model = Sequential()
@@ -100,13 +102,12 @@ def build_model3():
 
 if __name__ == '__main__':
     (x_train, y_train), (x_test, y_test) = load_data()
-    print(y_test.shape)
 
-    model1 = KerasClassifier(build_fn=build_model1, epochs=2, batch_size=64)
+    model1 = KerasClassifier(build_fn=build_model1, epochs=20, batch_size=64)
     model1._estimator_type = "classifier"
-    model2 = KerasClassifier(build_fn=build_model2, epochs=2, batch_size=64)
+    model2 = KerasClassifier(build_fn=build_model2, epochs=20, batch_size=64)
     model2._estimator_type = "classifier"
-    model3 = KerasClassifier(build_fn=build_model3, epochs=2, batch_size=64)
+    model3 = KerasClassifier(build_fn=build_model3, epochs=20, batch_size=64)
     model3._estimator_type = "classifier"
 
     # if ‘hard’, uses predicted class labels for majority rule voting.
@@ -118,5 +119,5 @@ if __name__ == '__main__':
                                        ['model3', model3]),
                            voting='hard')
     cls.fit(x_train, y_train)
-    
+
     print("score: ", cls.score(x_test, y_test))
