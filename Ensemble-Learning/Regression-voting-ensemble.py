@@ -14,7 +14,7 @@ from keras.layers import Dense
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import VotingRegressor
-
+from sklearn.externals import joblib
 
 def load_data():
     (x_train, y_train), (x_test, y_test) = boston_housing.load_data()
@@ -49,10 +49,13 @@ if __name__ == '__main__':
     model3 = KerasRegressor(build_fn=build_model, epochs=100, batch_size=64)
     model3._estimator_type = "regressor"
 
-    cls = VotingRegressor(estimators=(['model1', model1],
-                                       ['model2', model2],
-                                       ['model3', model3]),
-                          n_jobs=-1)
+    cls = VotingRegressor(estimators=[
+                                      ('model1', model1),
+                                      ('model2', model2),
+                                      ('model3', model3)
+                                      ])
     cls.fit(x_train, y_train)
+    joblib.dump(cls, "sklearn-regressor.h5")
 
-    # print(cls.score(x_test, y_test))
+    print("score: ", cls.score(x_test, y_test))
+

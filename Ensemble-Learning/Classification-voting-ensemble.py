@@ -116,6 +116,7 @@ if __name__ == '__main__':
     cls = VotingClassifier(estimators=(['model1', model1],
                                        ['model2', model2],
                                        ['model3', model3]),
-                           n_jobs=-1,
                            voting='hard')
     cls.fit(x_train, y_train)
+    
+    print("score: ", cls.score(x_test, y_test))
