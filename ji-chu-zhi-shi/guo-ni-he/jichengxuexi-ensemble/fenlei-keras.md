@@ -98,18 +98,6 @@ test loss: 0.13618469612854534, test accuracy: 0.972000002861023
 
 ![](../../../.gitbook/assets/image%20%28420%29.png)
 
-## keras集成学习-投票法
-
-```python
-
-```
-
-### 模型结构
-
-### 模型输出
-
-### 模型损失以及准确率曲线
-
 ## keras-scikit\_learn集成学习
 
 ```python
