@@ -119,4 +119,3 @@ if __name__ == '__main__':
                            n_jobs=-1,
                            voting='hard')
     cls.fit(x_train, y_train)
-    
