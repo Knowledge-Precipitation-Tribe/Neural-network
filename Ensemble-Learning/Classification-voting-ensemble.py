@@ -14,8 +14,9 @@ from keras.wrappers.scikit_learn import KerasClassifier
 from keras.models import Sequential
 from keras.layers import Dense
 
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import VotingClassifier
+from sklearn.model_selection import cross_val_score
 
 from pathlib import Path
 
@@ -23,8 +24,8 @@ def load_data():
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
     x_train = x_train.reshape(x_train.shape[0], 28 * 28)
     x_test = x_test.reshape(x_test.shape[0], 28 * 28)
-    y_train = OneHotEncoder().fit_transform(y_train.reshape(-1,1))
-    y_test = OneHotEncoder().fit_transform(y_test.reshape(-1,1))
+    y_train = LabelEncoder().fit_transform(y_train.reshape(-1,1))
+    y_test = LabelEncoder().fit_transform(y_test.reshape(-1,1))
     return (x_train, y_train), (x_test, y_test)
 
 
@@ -50,6 +51,20 @@ def draw_train_history(history):
     plt.xlabel('epoch')
     plt.legend(['train', 'validation'])
     plt.show()
+
+
+def build_model(hidden_units):
+    model = Sequential()
+    for index, unit in enumerate(hidden_units):
+        if index == 0:
+            model.add(Dense(unit, activation='relu', input_shape=(784, )))
+        else:
+            model.add(Dense(unit, activation='relu'))
+    model.add(Dense(10, activation='softmax'))
+    model.compile(optimizer='Adam',
+                  loss='categorical_crossentropy',
+                  metrics=['accuracy'])
+    return model
 
 
 def build_model1():
@@ -85,39 +100,23 @@ def build_model3():
 
 if __name__ == '__main__':
     (x_train, y_train), (x_test, y_test) = load_data()
+    print(y_test.shape)
 
-    model1 = KerasClassifier(build_fn=build_model1, epochs=20, batch_size=64)
-    model2 = KerasClassifier(build_fn=build_model2, epochs=20, batch_size=64)
-    model3 = KerasClassifier(build_fn=build_model3, epochs=20, batch_size=64)
+    model1 = KerasClassifier(build_fn=build_model1, epochs=2, batch_size=64)
+    model1._estimator_type = "classifier"
+    model2 = KerasClassifier(build_fn=build_model2, epochs=2, batch_size=64)
+    model2._estimator_type = "classifier"
+    model3 = KerasClassifier(build_fn=build_model3, epochs=2, batch_size=64)
+    model3._estimator_type = "classifier"
 
+    # if ‘hard’, uses predicted class labels for majority rule voting.
+    # if ‘soft’, predicts the class label based on the argmax of the
+    # sums of the predicted probabilities,
+    # which is recommended for an ensemble of well-calibrated classifiers.
     cls = VotingClassifier(estimators=(['model1', model1],
                                        ['model2', model2],
                                        ['model3', model3]),
-                           n_jobs=-1)
-    cls = cls.fit(x_train, y_train)
-
-
-
-    # for index, m in enumerate(models):
-    #     weights_path = "./classification-voting-ensemble/sklearn_model" + str(index+1) +".h5"
-    #     file = Path(weights_path)
-    #     if not file.exists():
-    #         history = m.fit(x_train, y_train,
-    #                         epochs=20,
-    #                         batch_size=64,
-    #                         validation_split=0.3)
-    #         draw_train_history(history)
-    #         m.model.save_weights(weights_path)
-    #         loss, accuracy = m.model.evaluate(x_test, y_test)
-    #         print("model" + str(index + 1) + " test loss: {}, test accuracy: {}".format(loss, accuracy))
-    #     else:
-    #         m.model.load_weights(weights_path)
-    #
-    #     result = m.predict(x_test)
-    #     print(result.shape)
-    #     result = result.max(axis=1, keepdims=True)
-    #     results.append(result)
-    #
-    # results = np.array(results)
-    # print(results)
-    # print(results.shape)
+                           n_jobs=-1,
+                           voting='hard')
+    cls.fit(x_train, y_train)
+    
